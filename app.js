@@ -30,17 +30,31 @@ app.use(bodyParser.json());
 
 //---> Clients
 
-app.get('/clients/:uid', (req, res) => {
-  connection.query(`SELECT * FROM clients WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+app.get('/clients/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM clients WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.post('/addclient', (req, res) => {
-  //console.log(req.body);
-  connection.query(`INSERT INTO clients (uid, clientFirstName, clientLastName, clientEmail, clientPhone, clientNotes) VALUES ('${req.body.uid}', '${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.phone}', '${req.body.notes}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO clients (uid, tripId, clientFirstName, clientLastName, clientEmail, clientPhone, clientNotes) VALUES ('${req.body.uid}', '${req.body.tripId}', '${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.phone}', "${req.body.notes}")`, function (error, results, fields) {
     if (error) throw error;
+      res.send(results);
+  })
+})
+
+app.put('/editclient', function (req, res) {
+  console.log(req.body);
+  connection.query(`UPDATE clients SET clientFirstName = '${req.body.clientFirstName}', clientLastName = '${req.body.clientLastName}', clientEmail = '${req.body.clientEmail}', clientPhone = '${req.body.clientPhone}', clientNotes = '${req.body.clientNotes}' WHERE clientId = '${req.body.clientId}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.post('/deleteclient', function (req, res) {
+  connection.query(`DELETE FROM clients WHERE clientId = ${req.body.clientId}`, (err, results, fields) => {
+    if (err) throw err;
       res.send(results);
   })
 })
@@ -84,6 +98,29 @@ app.post('/deletespot', function (req, res) {
   })
 })
 
+//---> Hot Flies
+
+app.get('/hotflies/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM hotFlies WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.post('/addhotfly', (req, res) => {
+  connection.query(`INSERT INTO hotFlies (uid, tripId, size, pattern, color) VALUES('${req.body.uid}', '${req.body.tripId}', '${req.body.size}', '${req.body.pattern}', '${req.body.color}')`, function (error, results, fields) {
+    if (error) throw error;
+      res.send(results);
+  })
+})
+
+app.post('/deletehotfly', function (req, res) {
+  connection.query(`DELETE FROM hotFlies WHERE hotFliesId = ${req.body.hotFliesId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
 //---> flybox
 
 app.get('/flybox/:uid', (req, res) => {
@@ -94,7 +131,7 @@ app.get('/flybox/:uid', (req, res) => {
 })
 
 app.post('/addfly', (req, res) => {
-  connection.query(`INSERT INTO flybox (uid, flyPattern, flyType) VALUES('${req.body.uid}', '${req.body.flyPattern}', '${req.body.flyType}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO flybox (uid, flyPattern, flyType) VALUES('${req.body.uid}', "${req.body.flyPattern}", '${req.body.flyType}')`, function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
