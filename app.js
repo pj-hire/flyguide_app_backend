@@ -22,11 +22,14 @@ app.use(bodyParser.json());
 
 //---> start endpoints
 
-
-
 //---> Trips
 
-
+app.get('/aaid', (req, res) => {
+  connection.query(`SELECT Auto_increment FROM information_schema.tables WHERE table_name='trips'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
 
 //---> Clients
 
@@ -45,7 +48,7 @@ app.post('/addclient', (req, res) => {
 })
 
 app.put('/editclient', function (req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   connection.query(`UPDATE clients SET clientFirstName = '${req.body.clientFirstName}', clientLastName = '${req.body.clientLastName}', clientEmail = '${req.body.clientEmail}', clientPhone = '${req.body.clientPhone}', clientNotes = '${req.body.clientNotes}' WHERE clientId = '${req.body.clientId}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -91,7 +94,6 @@ app.put('/editspot', function (req, res) {
 })
 
 app.post('/deletespot', function (req, res) {
-  //console.log(req.body.flyId);
   connection.query(`DELETE FROM mySpots WHERE spotId = ${req.body.spotId}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -101,6 +103,7 @@ app.post('/deletespot', function (req, res) {
 //---> Hot Flies
 
 app.get('/hotflies/:tripid', (req, res) => {
+  //console.log(req.params.tripid);
   connection.query(`SELECT * FROM hotFlies WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -117,6 +120,39 @@ app.post('/addhotfly', (req, res) => {
 app.post('/deletehotfly', function (req, res) {
   connection.query(`DELETE FROM hotFlies WHERE hotFliesId = ${req.body.hotFliesId}`, (err, results, fields) => {
     if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> Fish Species
+
+app.get('/fishspecies/:uid', (req, res) => {
+  connection.query(`SELECT * FROM fishSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> Fish Caught
+
+app.get('/fishcaught/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM fishCaught WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.post('/addfishcaught', (req, res) => {
+  connection.query(`INSERT INTO fishCaught (uid, tripId, speciesCaught, qtyCaught) VALUES('${req.body.uid}', '${req.body.tripId}', '${req.body.species}', '${req.body.qty}')`, function (error, results, fields) {
+    if (error) throw error;
+      res.send(results);
+  })
+})
+
+//this is where I left off
+app.post('/updatefishcaught', (req, res) => {
+  connection.query(`INSERT INTO fishCaught (uid, tripId, speciesCaught, qtyCaught) VALUES('${req.body.uid}', '${req.body.tripId}', '${req.body.species}', '${req.body.qty}')`, function (error, results, fields) {
+    if (error) throw error;
       res.send(results);
   })
 })
