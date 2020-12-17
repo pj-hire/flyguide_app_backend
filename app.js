@@ -71,34 +71,34 @@ app.get('/myspots/:uid', (req, res) => {
   })
 })
 
-app.post('/addspot', (req, res) => {
-  //console.log(req.body);
-  connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES('${req.body.uid}', '${req.body.locationName}', '${req.body.subLocationName}')`, function (error, results, fields) {
-    if (error) throw error;
-      res.send(results);
-  })
-})
+// app.post('/addspot', (req, res) => {
+//   //console.log(req.body);
+//   connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES('${req.body.uid}', '${req.body.locationName}', '${req.body.subLocationName}')`, function (error, results, fields) {
+//     if (error) throw error;
+//       res.send(results);
+//   })
+// })
 
-app.get('/myspots/editspot/:id', (req, res) => {
-  connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.id}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results[0]);
-  })
-})
+// app.get('/myspots/editspot/:id', (req, res) => {
+//   connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.id}'`, (err, results, fields) => {
+//     if (err) throw err;
+//       res.send(results[0]);
+//   })
+// })
 
-app.put('/editspot', function (req, res) {
-  connection.query(`UPDATE mySpots SET locationName = '${req.body.locationName}', subLocationName = '${req.body.subLocationName}' WHERE spotId = '${req.body.spotId}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results);
-  })
-})
+// app.put('/editspot', function (req, res) {
+//   connection.query(`UPDATE mySpots SET locationName = '${req.body.locationName}', subLocationName = '${req.body.subLocationName}' WHERE spotId = '${req.body.spotId}'`, (err, results, fields) => {
+//     if (err) throw err;
+//       res.send(results);
+//   })
+// })
 
-app.post('/deletespot', function (req, res) {
-  connection.query(`DELETE FROM mySpots WHERE spotId = ${req.body.spotId}`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results);
-  })
-})
+// app.post('/deletespot', function (req, res) {
+//   connection.query(`DELETE FROM mySpots WHERE spotId = ${req.body.spotId}`, (err, results, fields) => {
+//     if (err) throw err;
+//       res.send(results);
+//   })
+// })
 
 //---> Hot Flies
 
