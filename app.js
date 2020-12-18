@@ -71,34 +71,34 @@ app.get('/myspots/:uid', (req, res) => {
   })
 })
 
-// app.post('/addspot', (req, res) => {
-//   //console.log(req.body);
-//   connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES('${req.body.uid}', '${req.body.locationName}', '${req.body.subLocationName}')`, function (error, results, fields) {
-//     if (error) throw error;
-//       res.send(results);
-//   })
-// })
+app.post('/addspot', (req, res) => {
+  //console.log(req.body);
+  connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES('${req.body.uid}', '${req.body.locationName}', '${req.body.subLocationName}')`, function (error, results, fields) {
+    if (error) throw error;
+      res.send(results);
+  })
+})
 
-// app.get('/myspots/editspot/:id', (req, res) => {
-//   connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.id}'`, (err, results, fields) => {
-//     if (err) throw err;
-//       res.send(results[0]);
-//   })
-// })
+app.get('/myspots/editspot/:id', (req, res) => {
+  connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.id}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results[0]);
+  })
+})
 
-// app.put('/editspot', function (req, res) {
-//   connection.query(`UPDATE mySpots SET locationName = '${req.body.locationName}', subLocationName = '${req.body.subLocationName}' WHERE spotId = '${req.body.spotId}'`, (err, results, fields) => {
-//     if (err) throw err;
-//       res.send(results);
-//   })
-// })
+app.put('/editspot', function (req, res) {
+  connection.query(`UPDATE mySpots SET locationName = '${req.body.locationName}', subLocationName = '${req.body.subLocationName}' WHERE spotId = '${req.body.spotId}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
 
-// app.post('/deletespot', function (req, res) {
-//   connection.query(`DELETE FROM mySpots WHERE spotId = ${req.body.spotId}`, (err, results, fields) => {
-//     if (err) throw err;
-//       res.send(results);
-//   })
-// })
+app.post('/deletespot', function (req, res) {
+  connection.query(`DELETE FROM mySpots WHERE spotId = ${req.body.spotId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
 
 //---> Hot Flies
 
@@ -190,6 +190,30 @@ app.put('/editfly', function (req, res) {
 app.post('/deletefly', function (req, res) {
   //console.log(req.body.flyId);
   connection.query(`DELETE FROM flybox WHERE flyId = ${req.body.flyId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> fish Caught
+
+app.post('/addnewspecies', (req, res) => {
+  connection.query(`INSERT INTO fishSpecies (uid, fishSpeciesName) VALUES('${req.body.uid}', '${req.body.name}')`, function (error, results, fields) {
+    if (error) throw error;
+      res.send(results);
+  })
+})
+
+app.post('/addfishcaughtqty', (req, res) => {
+  connection.query(`INSERT INTO fishCaught (uid, tripId, fishSpeciesId, qtyCaught) VALUES('${req.body.uid}', "${req.body.tripId}", '${req.body.fishSpeciesId}', '${req.body.qtyCaught}')`, function (error, results, fields) {
+    if (error) throw error;
+      res.send(results);
+  })
+})
+
+app.put('/editfishcaughtqty', function (req, res) {
+  //console.log(req.body);
+  connection.query(`UPDATE fishCaught SET qtyCaught = '${req.body.qtyCaught}' WHERE tripId = '${req.body.tripId}' AND fishSpeciesId = '${req.body.fishSpeciesId}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
