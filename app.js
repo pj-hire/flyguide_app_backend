@@ -24,9 +24,32 @@ app.use(bodyParser.json());
 
 //---> Trips
 
-app.get('/aaid', (req, res) => {
+app.get('/aaidtrip', (req, res) => {
   connection.query(`SELECT Auto_increment FROM information_schema.tables WHERE table_name='trips'`, (err, results, fields) => {
     if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> Reports
+
+app.get('/aaidreport', (req, res) => {
+  connection.query(`SELECT Auto_increment FROM information_schema.tables WHERE table_name='reports'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.get('/reports/:uid', (req, res) => {
+  connection.query(`SELECT * FROM reports WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.post('/savereport', (req, res) => {
+  connection.query(`INSERT INTO reports (reportId, tripId, uid, spotId, notes) VALUES ('${req.body.reportId}', '${req.body.tripId}', '${req.body.uid}', '${req.body.spotId}', '${req.body.notes}')`, function (error, results, fields) {
+    if (error) throw error;
       res.send(results);
   })
 })
@@ -102,16 +125,15 @@ app.post('/deletespot', function (req, res) {
 
 //---> Hot Flies
 
-app.get('/hotflies/:tripid', (req, res) => {
-  //console.log(req.params.tripid);
-  connection.query(`SELECT * FROM hotFlies WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
+app.get('/hotflies/:reportid', (req, res) => {
+  connection.query(`SELECT * FROM hotFlies WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.post('/addhotfly', (req, res) => {
-  connection.query(`INSERT INTO hotFlies (uid, tripId, size, pattern, color) VALUES('${req.body.uid}', '${req.body.tripId}', '${req.body.size}', '${req.body.pattern}', '${req.body.color}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO hotFlies (uid, reportId, size, pattern, color) VALUES('${req.body.uid}', '${req.body.reportId}', '${req.body.size}', '${req.body.pattern}', '${req.body.color}')`, function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
@@ -120,39 +142,6 @@ app.post('/addhotfly', (req, res) => {
 app.post('/deletehotfly', function (req, res) {
   connection.query(`DELETE FROM hotFlies WHERE hotFliesId = ${req.body.hotFliesId}`, (err, results, fields) => {
     if (err) throw err;
-      res.send(results);
-  })
-})
-
-//---> Fish Species
-
-app.get('/fishspecies/:uid', (req, res) => {
-  connection.query(`SELECT * FROM fishSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results);
-  })
-})
-
-//---> Fish Caught
-
-app.get('/fishcaught/:tripid', (req, res) => {
-  connection.query(`SELECT * FROM fishCaught WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results);
-  })
-})
-
-app.post('/addfishcaught', (req, res) => {
-  connection.query(`INSERT INTO fishCaught (uid, tripId, speciesCaught, qtyCaught) VALUES('${req.body.uid}', '${req.body.tripId}', '${req.body.species}', '${req.body.qty}')`, function (error, results, fields) {
-    if (error) throw error;
-      res.send(results);
-  })
-})
-
-//this is where I left off
-app.post('/updatefishcaught', (req, res) => {
-  connection.query(`INSERT INTO fishCaught (uid, tripId, speciesCaught, qtyCaught) VALUES('${req.body.uid}', '${req.body.tripId}', '${req.body.species}', '${req.body.qty}')`, function (error, results, fields) {
-    if (error) throw error;
       res.send(results);
   })
 })
@@ -195,7 +184,24 @@ app.post('/deletefly', function (req, res) {
   })
 })
 
+//---> Fish Species
+
+app.get('/fishspecies/:uid', (req, res) => {
+  connection.query(`SELECT * FROM fishSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
 //---> fish Caught
+
+app.get('/fishcaughtqty/:reportid', (req, res) => {
+  console.log(req.params.reportid);
+  connection.query(`SELECT * FROM fishCaught WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
 
 app.post('/addnewspecies', (req, res) => {
   connection.query(`INSERT INTO fishSpecies (uid, fishSpeciesName) VALUES('${req.body.uid}', '${req.body.name}')`, function (error, results, fields) {
@@ -205,7 +211,7 @@ app.post('/addnewspecies', (req, res) => {
 })
 
 app.post('/addfishcaughtqty', (req, res) => {
-  connection.query(`INSERT INTO fishCaught (uid, tripId, fishSpeciesId, qtyCaught) VALUES('${req.body.uid}', "${req.body.tripId}", '${req.body.fishSpeciesId}', '${req.body.qtyCaught}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO fishCaught (uid, reportId, fishSpeciesId, qtyCaught) VALUES('${req.body.uid}', "${req.body.reportId}", '${req.body.fishSpeciesId}', '${req.body.qtyCaught}')`, function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
@@ -213,11 +219,25 @@ app.post('/addfishcaughtqty', (req, res) => {
 
 app.put('/editfishcaughtqty', function (req, res) {
   //console.log(req.body);
-  connection.query(`UPDATE fishCaught SET qtyCaught = '${req.body.qtyCaught}' WHERE tripId = '${req.body.tripId}' AND fishSpeciesId = '${req.body.fishSpeciesId}'`, (err, results, fields) => {
+  connection.query(`UPDATE fishCaught SET qtyCaught = '${req.body.qtyCaught}' WHERE reportId = '${req.body.reportId}' AND fishSpeciesId = '${req.body.fishSpeciesId}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
+
+
+
+
+// //---> IF there is already an entry, update. If there isn't already an entry, create. Post request.
+//
+// app.post('/updatefishcaughtqty', (req, res) => {
+//   connection.query(`INSERT INTO fishCaught (uid, reportId, fishSpeciesId, qtyCaught) VALUES('${req.body.uid}', '${req.body.reportId}', '${req.body.fishSpeciesId}', '${req.body.qtyCaught}') ON DUPLICATE KEY UPDATE qtyCaught = '${req.body.qtyCaught}'`, function (error, results, fields) {
+//     if (error) throw error;
+//       res.send(results);
+//   })
+// })
+
+
 
 //---> end endpoints
 
