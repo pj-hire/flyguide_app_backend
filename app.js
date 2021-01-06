@@ -24,9 +24,23 @@ app.use(bodyParser.json());
 
 //---> Trips
 
-app.get('/aaidtrip', (req, res) => {
-  connection.query(`SELECT Auto_increment FROM information_schema.tables WHERE table_name='trips'`, (err, results, fields) => {
+app.get('/trips/:uid', (req, res) => {
+  connection.query(`SELECT * FROM trips WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.get('/aaidtrip', (req, res) => {
+  connection.query(`SELECT tripId FROM trips ORDER BY tripId DESC LIMIT 1`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+app.post('/savetrip', (req, res) => {
+  connection.query(`INSERT INTO trips (uid, date, guideOrPersonalTrip, guideTripType, guideTripNumberInParty, tripNotes) VALUES('${req.body.uid}', '${req.body.date}', '${req.body.tripType}', '${req.body.guideTripType}', '${req.body.numberInParty}', '${req.body.tripNotes}')`, function (error, results, fields) {
+    if (error) throw error;
       res.send(results);
   })
 })
@@ -40,16 +54,9 @@ app.get('/aaidreport', (req, res) => {
   })
 })
 
-//shouldnt uid be reportid here??
-// app.get('/reports/:uid', (req, res) => {
-//   connection.query(`SELECT * FROM reports WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
-//     if (err) throw err;
-//       res.send(results);
-//   })
-// })
-
-app.get('/reports/:reportid', (req, res) => {
-  connection.query(`SELECT * FROM reports WHERE uid = '${req.params.reportid}'`, (err, results, fields) => {
+//--> select all reports from one trip
+app.get('/reports/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM reports WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -69,14 +76,41 @@ app.put('/savereportchanges', function (req, res) {
   })
 })
 
+//delete report
 app.post('/deletereport', function (req, res) {
   connection.query(`DELETE FROM reports WHERE reportId = ${req.body.reportId}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
+    })
+  })
+
+//delete hotflies associated with deleted report
+app.post('/deletereporthotflies', function (req, res) {
+  connection.query(`DELETE FROM hotFlies WHERE reportId = ${req.body.reportId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
   })
 })
-//---> Clients
 
+//delete fishcaught associated with deleted report
+app.post('/deletereportfishcaught', function (req, res) {
+  connection.query(`DELETE FROM fishCaught WHERE reportId = ${req.body.reportId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> CLIENTS
+
+//my trips - get all clients with uid
+app.get('/mytripsclients/:uid', (req, res) => {
+  connection.query(`SELECT * FROM clients WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+//addatrip - get all clients with tripId
 app.get('/clients/:tripid', (req, res) => {
   connection.query(`SELECT * FROM clients WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
@@ -196,7 +230,6 @@ app.put('/editfly', function (req, res) {
 })
 
 app.post('/deletefly', function (req, res) {
-  //console.log(req.body.flyId);
   connection.query(`DELETE FROM flybox WHERE flyId = ${req.body.flyId}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -268,15 +301,6 @@ app.post('/addfishcaught', (req, res) => {
 app.post('/deletefishcaught', function (req, res) {
   connection.query(`DELETE FROM fishCaught WHERE fishCaughtId = ${req.body.fishCaughtId}`, (err, results, fields) => {
     if (err) throw err;
-      res.send(results);
-  })
-})
-
-//---> trip
-
-app.post('/savetrip', (req, res) => {
-  connection.query(`INSERT INTO trips (uid, date, guideOrPersonalTrip, guideTripType, guideTripNumberInParty, tripNotes) VALUES('${req.body.uid}', '${req.body.date}', '${req.body.tripType}', '${req.body.guideTripType}', '${req.body.numberInParty}', '${req.body.tripNotes}')`, function (error, results, fields) {
-    if (error) throw error;
       res.send(results);
   })
 })
