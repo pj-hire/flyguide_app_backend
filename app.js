@@ -45,7 +45,15 @@ app.post('/savetrip', (req, res) => {
   })
 })
 
-//---> Reports
+//viewtrip - select all trips where tripId matches route
+app.get('/viewtrip/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM trips where tripId = '${req.params.tripid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> REPORTS
 
 app.get('/aaidreport', (req, res) => {
   connection.query(`SELECT reportId FROM reports ORDER BY reportId DESC LIMIT 1`, (err, results, fields) => {
@@ -100,6 +108,14 @@ app.post('/deletereportfishcaught', function (req, res) {
   })
 })
 
+//viewtrip - select all reports where tripId matches route
+app.get('/viewtripreports/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM reports where tripId = '${req.params.tripid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
 //---> CLIENTS
 
 //my trips - get all clients with uid
@@ -139,7 +155,15 @@ app.post('/deleteclient', function (req, res) {
   })
 })
 
-//---> Spots
+//viewtrip - select all clients where tripId matches route
+app.get('/viewtripclients/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM clients where tripId = '${req.params.tripid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
+//---> SPOTS
 
 app.get('/myspots/:uid', (req, res) => {
   connection.query(`SELECT * FROM mySpots WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
@@ -176,7 +200,7 @@ app.post('/deletespot', function (req, res) {
   })
 })
 
-//---> Hot Flies
+//---> HOT FLIES
 
 app.get('/hotflies/:reportid', (req, res) => {
   connection.query(`SELECT * FROM hotFlies WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
@@ -199,7 +223,7 @@ app.post('/deletehotfly', function (req, res) {
   })
 })
 
-//---> flybox
+//---> FLYBOX
 
 app.get('/flybox/:uid', (req, res) => {
   connection.query(`SELECT * FROM flybox WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
@@ -236,7 +260,7 @@ app.post('/deletefly', function (req, res) {
   })
 })
 
-//---> Target species
+//---> TARGET SPECIES
 
 app.get('/targetspecies/:uid', (req, res) => {
   connection.query(`SELECT * FROM targetSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
@@ -273,7 +297,7 @@ app.post('/deletespecies', function (req, res) {
   })
 })
 
-//---> Fish Species
+//---> FISH SPECIES
 
 app.get('/fishspecies/:uid', (req, res) => {
   connection.query(`SELECT * FROM fishSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
@@ -282,7 +306,7 @@ app.get('/fishspecies/:uid', (req, res) => {
   })
 })
 
-//---> fish Caught
+//---> FISH CAUGHT
 
 app.get('/fishcaught/:reportid', (req, res) => {
   connection.query(`SELECT * FROM fishCaught WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
