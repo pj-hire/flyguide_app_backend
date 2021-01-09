@@ -172,6 +172,14 @@ app.get('/myspots/:uid', (req, res) => {
   })
 })
 
+//for Viewtrip
+app.get('/myspotsviewtrip/:spotid', (req, res) => {
+  connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.spotid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
 app.post('/addspot', (req, res) => {
   connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES('${req.body.uid}', '${req.body.locationName}', '${req.body.subLocationName}')`, function (error, results, fields) {
     if (error) throw error;
@@ -317,6 +325,13 @@ app.get('/fishcaught/:reportid', (req, res) => {
 
 app.post('/addfishcaught', (req, res) => {
   connection.query(`INSERT INTO fishCaught (uid, reportId, fishSpeciesId, speciesName, qtyCaught) VALUES('${req.body.uid}', '${req.body.reportId}', '${req.body.fishSpeciesId}', '${req.body.speciesName}', '${req.body.qtyCaught}')`, function (error, results, fields) {
+    if (error) throw error;
+      res.send(results);
+  })
+})
+
+app.post('/addfishcaughtqty', (req, res) => {
+  connection.query(`UPDATE fishCaught SET qtyCaught = '${req.body.qtyCaught}' WHERE fishCaughtId = '${req.body.fishCaughtId}'`, function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
