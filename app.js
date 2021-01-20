@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 //---> start endpoints
 
-//---> Trips
+//---> TRIPS
 
 app.get('/trips/:uid', (req, res) => {
   connection.query(`SELECT * FROM trips WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
@@ -52,6 +52,53 @@ app.get('/viewtrip/:tripid', (req, res) => {
       res.send(results);
   })
 })
+
+
+
+
+//delete all trips that match tripId
+app.post('/deletetrip-trip', function (req, res) {
+  connection.query(`DELETE FROM trips WHERE tripId = ${req.body.tripId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+    })
+  })
+
+//delete all clients associated with a tripId
+app.post('/deletetrip-clients', function (req, res) {
+  connection.query(`DELETE FROM clients WHERE tripId = ${req.body.tripId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+    })
+  })
+
+//delete all reports associated with a tripId
+app.post('/deletetrip-reports', function (req, res) {
+  connection.query(`DELETE FROM reports WHERE tripId = ${req.body.tripId}`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+    })
+  })
+
+  //delete hotflies associated with all reports associated with trip
+  app.post('/deletetrip-hotflies', function (req, res) {
+    console.log(req.body.reportId)
+    connection.query(`DELETE FROM hotFlies WHERE reportId = ${req.body.reportId}`, (err, results, fields) => {
+      if (err) throw err;
+        res.send(results);
+    })
+  })
+
+  //delete fishcaught associated with all reports associated with trip
+  app.post('/deletetrip-fishcaught', function (req, res) {
+    connection.query(`DELETE FROM fishCaught WHERE reportId = ${req.body.reportId}`, (err, results, fields) => {
+      if (err) throw err;
+        res.send(results);
+    })
+  })
+
+
+
 
 //---> REPORTS
 
