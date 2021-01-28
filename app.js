@@ -255,6 +255,13 @@ app.post('/deletespot', function (req, res) {
 
 //---> HOT FLIES
 
+app.get('/hotfliez/:uid', (req, res) => {
+  connection.query(`SELECT * FROM hotFlies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
 app.get('/hotflies/:reportid', (req, res) => {
   connection.query(`SELECT * FROM hotFlies WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
     if (err) throw err;
