@@ -255,7 +255,7 @@ app.post('/deletespot', function (req, res) {
 
 //---> HOT FLIES
 
-app.get('/hotfliez/:uid', (req, res) => {
+app.get('/hotfliesstats/:uid', (req, res) => {
   connection.query(`SELECT * FROM hotFlies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -367,6 +367,13 @@ app.get('/fishspecies/:uid', (req, res) => {
 })
 
 //---> FISH CAUGHT
+
+app.get('/fishcaughtstats/:uid', (req, res) => {
+  connection.query(`SELECT * FROM fishCaught WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
 
 app.get('/fishcaught/:reportid', (req, res) => {
   connection.query(`SELECT * FROM fishCaught WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
