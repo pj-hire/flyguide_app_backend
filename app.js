@@ -13,7 +13,12 @@ const dbCred = require('./private/db_credentials')
 //   database : 'flyguide_app'
 // });
 
-var connection = mysql.createConnection(dbCred);
+var connection = mysql.createConnection({
+  host     : '108.179.235.139',
+  user     : 'phire122_wrdp1',
+  password : '430E65terr',
+  database : 'phire122_flyguide_app'
+})
 
 connection.connect();
 
