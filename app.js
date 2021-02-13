@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const dbCred = require('./private/db_credentials')
+// const dbCred = require('./private/db_credentials')
 
 // var connection = mysql.createConnection({
 //   host     : 'localhost',
