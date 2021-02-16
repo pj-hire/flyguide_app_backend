@@ -14,10 +14,10 @@ const bodyParser = require('body-parser');
 // });
 
 var connection = mysql.createConnection({
-  host     : '108.179.235.139',
-  user     : 'phire122_wrdp1',
-  password : '430E65terr',
-  database : 'phire122_flyguide_app'
+  host     : '18.222.229.150',
+  user     : 'pjhire',
+  password : 'Mycell=816',
+  database : 'flyguide_app'
 })
 
 connection.connect();
