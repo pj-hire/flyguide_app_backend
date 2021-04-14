@@ -6,13 +6,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dbCred = require('./private/db_credentials')
 
-// var connection = mysql.createConnection({
-//   host     : 'localhost',
-//   user     : 'root',
-//   password : 'Mycell=816',
-//   database : 'flyguide_app'
-// });
-
 var connection = mysql.createConnection(dbCred);
 
 connection.connect();
@@ -402,5 +395,7 @@ app.post('/deletefishcaught', function (req, res) {
 })
 
 //---> end endpoints
+
+const PORT = process.env.PORT || 3000
 
 app.listen(3000);
