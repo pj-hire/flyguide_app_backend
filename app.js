@@ -4,27 +4,15 @@ const mysql = require('mysql');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-// const dbCred = require('./private/db_credentials')
+const dbCred = require('./private/db_credentials')
 
-// var connection = mysql.createConnection({
-//   host     : 'localhost',
-//   user     : 'root',
-//   password : 'Mycell=816',
-//   database : 'flyguide_app'
-// });
-
-var connection = mysql.createConnection({
-  host     : '18.222.229.150',
-  user     : 'pjhire',
-  password : 'Mycell=816',
-  database : 'flyguide_app'
-})
+var connection = mysql.createConnection(dbCred);
 
 connection.connect();
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -63,7 +51,6 @@ app.get('/viewtrip/:tripid', (req, res) => {
 
 //delete all trips that match tripId
 app.post('/deletetrip-trip', function (req, res) {
-  // console.log('trip tripId: ' + req.body.tripId);
   connection.query(`DELETE FROM trips WHERE tripId = ${req.body.tripId}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -72,7 +59,6 @@ app.post('/deletetrip-trip', function (req, res) {
 
 //delete all clients associated with a tripId
 app.post('/deletetrip-clients', function (req, res) {
-  // console.log('client tripId: ' + req.body.tripId);
   connection.query(`DELETE FROM clients WHERE tripId = ${req.body.tripId}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -81,7 +67,6 @@ app.post('/deletetrip-clients', function (req, res) {
 
 //delete all reports associated with a tripId
 app.post('/deletetrip-reports', function (req, res) {
-  // console.log('reports tripId: ' + req.body.tripId);
   connection.query(`DELETE FROM reports WHERE tripId = ${req.body.tripId}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -99,7 +84,6 @@ app.post('/deletetrip-reports', function (req, res) {
 
   //delete fishcaught associated with all reports associated with trip
   app.post('/deletetrip-fishcaught', function (req, res) {
-    // console.log('fishCaught reportId: ' + req.body.reportId);
     connection.query(`DELETE FROM fishCaught WHERE reportId = ${req.body.reportId}`, (err, results, fields) => {
       if (err) throw err;
         res.send(results);
