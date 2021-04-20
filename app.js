@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 
 //---> TRIPS
 
+// get all trips with users Firebase Auth uid
 app.get('/trips/:uid', (req, res) => {
   connection.query(`SELECT * FROM trips WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
@@ -27,6 +28,7 @@ app.get('/trips/:uid', (req, res) => {
   })
 })
 
+//set tripId to last trips Id + 1
 app.get('/aaidtrip', (req, res) => {
   connection.query(`SELECT tripId FROM trips ORDER BY tripId DESC LIMIT 1`, (err, results, fields) => {
     if (err) throw err;
@@ -155,46 +157,39 @@ app.get('/viewtripreports/:tripid', (req, res) => {
 
 //---> CLIENTS
 
-//my trips - get all clients with uid
-app.get('/mytripsclients/:uid', (req, res) => {
+//mytrips - get all clients with specified uid
+app.get('/clients/:uid', (req, res) => {
   connection.query(`SELECT * FROM clients WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
-//addatrip - get all clients with tripId
-app.get('/clients/:tripid', (req, res) => {
+//addtrip - get all clients with specified tripId
+app.get('/clients-trip/:tripid', (req, res) => {
   connection.query(`SELECT * FROM clients WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
-app.post('/addclient', (req, res) => {
+app.post('/clients', (req, res) => {
   connection.query(`INSERT INTO clients (uid, tripId, clientFirstName, clientLastName, clientEmail, clientPhone, clientNotes) VALUES ('${req.body.uid}', '${req.body.tripId}', '${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.phone}', "${req.body.notes}")`, function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
 
-app.put('/editclient', function (req, res) {
+app.put('/clients', function (req, res) {
+  console.log(req.body);
   connection.query(`UPDATE clients SET clientFirstName = '${req.body.clientFirstName}', clientLastName = '${req.body.clientLastName}', clientEmail = '${req.body.clientEmail}', clientPhone = '${req.body.clientPhone}', clientNotes = '${req.body.clientNotes}' WHERE clientId = '${req.body.clientId}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
-app.post('/deleteclient', function (req, res) {
-  connection.query(`DELETE FROM clients WHERE clientId = ${req.body.clientId}`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results);
-  })
-})
-
-//viewtrip - select all clients where tripId matches route
-app.get('/viewtripclients/:tripid', (req, res) => {
-  connection.query(`SELECT * FROM clients where tripId = '${req.params.tripid}'`, (err, results, fields) => {
+app.delete('/clients/:clientid', function (req, res) {
+  connection.query(`DELETE FROM clients WHERE clientId = ${req.params.clientid}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
