@@ -20,17 +20,25 @@ app.use(bodyParser.json());
 
 //---> TRIPS
 
+//set tripId to last trips Id + 1
+app.get('/aaidtrip', (req, res) => {
+  connection.query(`SELECT tripId FROM trips ORDER BY tripId DESC LIMIT 1`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results);
+  })
+})
+
 // get all trips with users Firebase Auth uid
-app.get('/trips/:uid', (req, res) => {
+app.get('/trips-uid/:uid', (req, res) => {
   connection.query(`SELECT * FROM trips WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
-//set tripId to last trips Id + 1
-app.get('/aaidtrip', (req, res) => {
-  connection.query(`SELECT tripId FROM trips ORDER BY tripId DESC LIMIT 1`, (err, results, fields) => {
+//viewtrip - select all trips where tripId matches route
+app.get('/trips/:tripid', (req, res) => {
+  connection.query(`SELECT * FROM trips where tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -43,14 +51,6 @@ app.post('/trips', (req, res) => {
   })
 })
 
-//viewtrip - select all trips where tripId matches route
-app.get('/trips-trip/:tripid', (req, res) => {
-  connection.query(`SELECT * FROM trips where tripId = '${req.params.tripid}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results);
-  })
-})
-
 //delete all trips that match tripId
 app.delete('/trips/:tripId', function (req, res) {
   connection.query(`DELETE FROM trips WHERE tripId = ${req.params.tripId}`, (err, results, fields) => {
@@ -58,9 +58,6 @@ app.delete('/trips/:tripId', function (req, res) {
       res.send(results);
     })
   })
-
-
-
 
 //---> REPORTS
 
@@ -109,8 +106,6 @@ app.delete('/reports-trip/:tripId', function (req, res) {
   })
 })
 
-
-
 //---> CLIENTS
 
 //mytrips - get all clients with specified google auth uid
@@ -121,7 +116,7 @@ app.get('/clients-uid/:uid', (req, res) => {
   })
 })
 
-//used in Viewtrip.vue
+//Viewtrip.vue - get all clients based on trip id
 app.get('/clients/:tripid', (req, res) => {
   connection.query(`SELECT * FROM clients WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
     if (err) throw err;
@@ -143,7 +138,7 @@ app.put('/clients', function (req, res) {
   })
 })
 
-// delete all clients with a specified client id - Addtrip line 530
+// delete all clients with a specified client id
 app.delete('/clients/:id', function (req, res) {
   connection.query(`DELETE FROM clients WHERE clientId = ${req.params.id}`, (err, results, fields) => {
     if (err) throw err;
@@ -151,16 +146,13 @@ app.delete('/clients/:id', function (req, res) {
   })
 })
 
-//delete all clients with specified tripid -
+//delete all clients with specified tripid
 app.delete('/clients-trip/:tripid', function (req, res) {
   connection.query(`DELETE FROM clients WHERE tripId = ${req.params.tripid}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
-
-
-
 
 //---> SPOTS
 
@@ -171,7 +163,6 @@ app.get('/spots-uid/:uid', (req, res) => {
   })
 })
 
-//for Viewtrip
 app.get('/spots/:spotid', (req, res) => {
   connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.spotid}'`, (err, results, fields) => {
     if (err) throw err;
@@ -207,9 +198,6 @@ app.delete('/spots/:spotId', function (req, res) {
   })
 })
 
-
-
-
 //---> HOT FLIES
 
 app.get('/hotflies-uid/:uid', (req, res) => {
@@ -233,7 +221,7 @@ app.post('/hotflies', (req, res) => {
   })
 })
 
-app.delete('/hotflies-flyId/:id', function (req, res) {
+app.delete('/hotflies-fly/:id', function (req, res) {
   connection.query(`DELETE FROM hotFlies WHERE hotFliesId = ${req.params.id}`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -248,13 +236,19 @@ app.delete('/hotflies/:reportId', function (req, res) {
   })
 })
 
-
 //---> FLYBOX
 
 app.get('/flybox/:uid', (req, res) => {
   connection.query(`SELECT * FROM flybox WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
+  })
+})
+
+app.get('/flybox/editfly/:id', (req, res) => {
+  connection.query(`SELECT * FROM flybox WHERE flyId = '${req.params.id}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results[0]);
   })
 })
 
@@ -279,22 +273,19 @@ app.delete('/flybox/:id', function (req, res) {
   })
 })
 
-app.get('/flybox/editfly/:id', (req, res) => {
-  connection.query(`SELECT * FROM flybox WHERE flyId = '${req.params.id}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results[0]);
-  })
-})
-
-
-
-
 //---> TARGET SPECIES
 
 app.get('/targetspecies/:uid', (req, res) => {
   connection.query(`SELECT * FROM targetSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
+  })
+})
+
+app.get('/targetspecies/editspecies/:id', (req, res) => {
+  connection.query(`SELECT * FROM targetSpecies WHERE fishSpeciesId = '${req.params.id}'`, (err, results, fields) => {
+    if (err) throw err;
+      res.send(results[0]);
   })
 })
 
@@ -318,16 +309,6 @@ app.delete('/targetspecies/:id', function (req, res) {
       res.send(results);
   })
 })
-
-app.get('/targetspecies/editspecies/:id', (req, res) => {
-  connection.query(`SELECT * FROM targetSpecies WHERE fishSpeciesId = '${req.params.id}'`, (err, results, fields) => {
-    if (err) throw err;
-      res.send(results[0]);
-  })
-})
-
-
-
 
 //---> FISH CAUGHT
 
@@ -360,8 +341,8 @@ app.delete('/fishcaught/:reportId', function (req, res) {
   })
 })
 
+//delete fishcaught associated with fishcaught id
 app.delete('/fishcaught-id/:id', function (req, res) {
-  console.log(req.params.id);
   connection.query(`DELETE FROM fishCaught WHERE fishCaughtId = '${req.params.id}'`, (err, results, fields) => {
     if (err) throw err;
       res.send(results);
@@ -376,14 +357,14 @@ app.delete('/fishcaught-trip/:reportId', function (req, res) {
   })
 })
 
+//---> FISH CAUGHT QUANTITY
+
 app.post('/fishcaughtqty', (req, res) => {
   connection.query(`UPDATE fishCaught SET qtyCaught = '${req.body.qtyCaught}' WHERE fishCaughtId = '${req.body.fishCaughtId}'`, function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
-
-
 
 //---> end endpoints
 
