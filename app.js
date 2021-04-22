@@ -423,21 +423,31 @@ app.delete('/targetspecies/:id', function (req, res) {
 //---> FISH CAUGHT
 
 app.get('/fishcaught-uid/:uid', (req, res) => {
-  connection.query(`SELECT * FROM fishCaught WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM fishCaught WHERE uid = ?`,[
+    req.params.uid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.get('/fishcaught/:reportid', (req, res) => {
-  connection.query(`SELECT * FROM fishCaught WHERE reportId = '${req.params.reportid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM fishCaught WHERE reportId = ?`,[
+    req.params.reportid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.post('/fishcaught', (req, res) => {
-  connection.query(`INSERT INTO fishCaught (uid, reportId, fishSpeciesId, speciesName, qtyCaught) VALUES('${req.body.uid}', '${req.body.reportId}', '${req.body.fishSpeciesId}', '${req.body.speciesName}', '${req.body.qtyCaught}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO fishCaught (uid, reportId, fishSpeciesId, speciesName, qtyCaught) VALUES(?, ?, ?, ?, ?)`,[
+    req.body.uid,
+    req.body.reportId,
+    req.body.fishSpeciesId,
+    req.body.speciesName,
+    req.body.qtyCaught
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
@@ -445,7 +455,9 @@ app.post('/fishcaught', (req, res) => {
 
 //delete fishcaught associated with deleted report
 app.delete('/fishcaught/:reportId', function (req, res) {
-  connection.query(`DELETE FROM fishCaught WHERE reportId = ${req.params.reportId}`, (err, results, fields) => {
+  connection.query(`DELETE FROM fishCaught WHERE reportId = ?`,[
+    req.params.reportId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -453,7 +465,9 @@ app.delete('/fishcaught/:reportId', function (req, res) {
 
 //delete fishcaught associated with fishcaught id
 app.delete('/fishcaught-id/:id', function (req, res) {
-  connection.query(`DELETE FROM fishCaught WHERE fishCaughtId = '${req.params.id}'`, (err, results, fields) => {
+  connection.query(`DELETE FROM fishCaught WHERE fishCaughtId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -461,7 +475,9 @@ app.delete('/fishcaught-id/:id', function (req, res) {
 
 //delete fishcaught associated with all reports associated with trip
 app.delete('/fishcaught-trip/:reportId', function (req, res) {
-  connection.query(`DELETE FROM fishCaught WHERE reportId = '${req.params.reportId}'`, (err, results, fields) => {
+  connection.query(`DELETE FROM fishCaught WHERE reportId = ?`,[
+    req.params.reportId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -470,7 +486,10 @@ app.delete('/fishcaught-trip/:reportId', function (req, res) {
 //---> FISH CAUGHT QUANTITY
 
 app.post('/fishcaughtqty', (req, res) => {
-  connection.query(`UPDATE fishCaught SET qtyCaught = '${req.body.qtyCaught}' WHERE fishCaughtId = '${req.body.fishCaughtId}'`, function (error, results, fields) {
+  connection.query(`UPDATE fishCaught SET qtyCaught = ? WHERE fishCaughtId = ?`,[
+    req.body.qtyCaught,
+    req.body.fishCaughtId
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
