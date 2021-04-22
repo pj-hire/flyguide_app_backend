@@ -139,7 +139,9 @@ app.delete('/reports-trip/:tripId', function (req, res) {
 
 //mytrips - get all clients with specified google auth uid
 app.get('/clients-uid/:uid', (req, res) => {
-  connection.query(`SELECT * FROM clients WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM clients WHERE uid = ?`,[
+    req.params.uid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -147,21 +149,38 @@ app.get('/clients-uid/:uid', (req, res) => {
 
 //Viewtrip.vue - get all clients based on trip id
 app.get('/clients/:tripid', (req, res) => {
-  connection.query(`SELECT * FROM clients WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM clients WHERE tripId = ?`,[
+    req.params.tripid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.post('/clients', (req, res) => {
-  connection.query(`INSERT INTO clients (uid, tripId, clientFirstName, clientLastName, clientEmail, clientPhone, clientNotes) VALUES ('${req.body.uid}', '${req.body.tripId}', '${req.body.firstName}', '${req.body.lastName}', '${req.body.email}', '${req.body.phone}', "${req.body.notes}")`, function (error, results, fields) {
+  connection.query(`INSERT INTO clients (uid, tripId, clientFirstName, clientLastName, clientEmail, clientPhone, clientNotes) VALUES (?, ?, ?, ?, ?, ?, ?)`,[
+    req.body.uid,
+    req.body.tripId,
+    req.body.firstName,
+    req.body.lastName,
+    req.body.email,
+    req.body.phone,
+    req.body.notes
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
 
 app.put('/clients', function (req, res) {
-  connection.query(`UPDATE clients SET clientFirstName = '${req.body.clientFirstName}', clientLastName = '${req.body.clientLastName}', clientEmail = '${req.body.clientEmail}', clientPhone = '${req.body.clientPhone}', clientNotes = '${req.body.clientNotes}' WHERE clientId = '${req.body.clientId}'`, (err, results, fields) => {
+  connection.query(`UPDATE clients SET clientFirstName = ?, clientLastName = ?, clientEmail = ?, clientPhone = ?, clientNotes = ? WHERE clientId = ?`,[
+    req.body.clientFirstName,
+    req.body.clientLastName,
+    req.body.clientEmail,
+    req.body.clientPhone,
+    req.body.clientNotes,
+    req.body.clientId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -169,7 +188,9 @@ app.put('/clients', function (req, res) {
 
 // delete all clients with a specified client id
 app.delete('/clients/:id', function (req, res) {
-  connection.query(`DELETE FROM clients WHERE clientId = ${req.params.id}`, (err, results, fields) => {
+  connection.query(`DELETE FROM clients WHERE clientId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -177,7 +198,9 @@ app.delete('/clients/:id', function (req, res) {
 
 //delete all clients with specified tripid
 app.delete('/clients-trip/:tripid', function (req, res) {
-  connection.query(`DELETE FROM clients WHERE tripId = ${req.params.tripid}`, (err, results, fields) => {
+  connection.query(`DELETE FROM clients WHERE tripId = ?`,[
+    req.params.tripid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
