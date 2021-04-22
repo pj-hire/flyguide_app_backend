@@ -372,35 +372,49 @@ app.delete('/flybox/:id', function (req, res) {
 //---> TARGET SPECIES
 
 app.get('/targetspecies/:uid', (req, res) => {
-  connection.query(`SELECT * FROM targetSpecies WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM targetSpecies WHERE uid = ?`,[
+    req.params.uid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.get('/targetspecies/editspecies/:id', (req, res) => {
-  connection.query(`SELECT * FROM targetSpecies WHERE fishSpeciesId = '${req.params.id}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM targetSpecies WHERE fishSpeciesId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results[0]);
   })
 })
 
 app.post('/targetspecies', (req, res) => {
-  connection.query(`INSERT INTO targetSpecies (uid, speciesName, habitat) VALUES('${req.body.uid}', "${req.body.speciesName}", '${req.body.habitat}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO targetSpecies (uid, speciesName, habitat) VALUES(?, ?, ?)`,[
+    req.body.uid,
+    req.body.speciesName,
+    req.body.habitat
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
 
 app.put('/targetspecies', function (req, res) {
-  connection.query(`UPDATE targetSpecies SET speciesName = '${req.body.speciesName}', habitat = '${req.body.habitat}' WHERE fishSpeciesId = '${req.body.fishSpeciesId}'`, (err, results, fields) => {
+  connection.query(`UPDATE targetSpecies SET speciesName = ?, habitat = ? WHERE fishSpeciesId = ?`,[
+    req.body.speciesName,
+    req.body.habitat,
+    req.body.fishSpeciesId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.delete('/targetspecies/:id', function (req, res) {
-  connection.query(`DELETE FROM targetSpecies WHERE fishSpeciesId = ${req.params.id}`, (err, results, fields) => {
+  connection.query(`DELETE FROM targetSpecies WHERE fishSpeciesId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
