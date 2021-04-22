@@ -209,42 +209,58 @@ app.delete('/clients-trip/:tripid', function (req, res) {
 //---> SPOTS
 
 app.get('/spots-uid/:uid', (req, res) => {
-  connection.query(`SELECT * FROM mySpots WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM mySpots WHERE uid = ?`,[
+    req.params.uid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.get('/spots/:spotid', (req, res) => {
-  connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.spotid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM mySpots WHERE spotId = ?`,[
+    req.params.spotid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.get('/spots/editspot/:id', (req, res) => {
-  connection.query(`SELECT * FROM mySpots WHERE spotId = '${req.params.id}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM mySpots WHERE spotId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results[0]);
   })
 })
 
 app.post('/spots', (req, res) => {
-  connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES('${req.body.uid}', '${req.body.locationName}', '${req.body.subLocationName}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO mySpots (uid, locationName, subLocationName) VALUES(?, ?, ?)`,[
+    req.body.uid,
+    req.body.locationName,
+    req.body.subLocationName
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
 
 app.put('/spots', function (req, res) {
-  connection.query(`UPDATE mySpots SET locationName = '${req.body.locationName}', subLocationName = '${req.body.subLocationName}' WHERE spotId = '${req.body.spotId}'`, (err, results, fields) => {
+  connection.query(`UPDATE mySpots SET locationName = ?, subLocationName = ? WHERE spotId = ?`,[
+    req.body.locationName,
+    req.body.subLocationName,
+    req.body.spotId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.delete('/spots/:spotId', function (req, res) {
-  connection.query(`DELETE FROM mySpots WHERE spotId = ${req.params.spotId}`, (err, results, fields) => {
+  connection.query(`DELETE FROM mySpots WHERE spotId = ?`,[
+    req.params.spotId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
