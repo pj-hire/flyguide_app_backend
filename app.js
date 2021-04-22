@@ -321,35 +321,49 @@ app.delete('/hotflies/:reportId', function (req, res) {
 //---> FLYBOX
 
 app.get('/flybox/:uid', (req, res) => {
-  connection.query(`SELECT * FROM flybox WHERE uid = '${req.params.uid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM flybox WHERE uid = ?`,[
+    req.params.uid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.get('/flybox/editfly/:id', (req, res) => {
-  connection.query(`SELECT * FROM flybox WHERE flyId = '${req.params.id}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM flybox WHERE flyId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results[0]);
   })
 })
 
 app.post('/flybox', (req, res) => {
-  connection.query(`INSERT INTO flybox (uid, flyPattern, flyType) VALUES('${req.body.uid}', "${req.body.flyPattern}", '${req.body.flyType}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO flybox (uid, flyPattern, flyType) VALUES(?, ?, ?)`,[
+    req.body.uid,
+    req.body.flyPattern,
+    req.body.flyType
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
 
 app.put('/flybox', function (req, res) {
-  connection.query(`UPDATE flybox SET flyPattern = '${req.body.flyPattern}', flyType = '${req.body.flyType}' WHERE flyId = '${req.body.flyId}'`, (err, results, fields) => {
+  connection.query(`UPDATE flybox SET flyPattern = ?, flyType = ? WHERE flyId = ?`,[
+    req.body.flyPattern,
+    req.body.flyType,
+    req.body.flyId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.delete('/flybox/:id', function (req, res) {
-  connection.query(`DELETE FROM flybox WHERE flyId = ${req.params.id}`, (err, results, fields) => {
+  connection.query(`DELETE FROM flybox WHERE flyId = ?`,[
+    req.params.id
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
