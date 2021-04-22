@@ -83,21 +83,33 @@ app.get('/aaidreport', (req, res) => {
 
 //--> select all reports from single trip based on tripId
 app.get('/reports/:tripid', (req, res) => {
-  connection.query(`SELECT * FROM reports WHERE tripId = '${req.params.tripid}'`, (err, results, fields) => {
+  connection.query(`SELECT * FROM reports WHERE tripId = ?`,[
+    req.params.tripid
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
 })
 
 app.post('/reports', (req, res) => {
-  connection.query(`INSERT INTO reports (reportId, tripId, uid, spotId, notes) VALUES ('${req.body.reportId}', '${req.body.tripId}', '${req.body.uid}', '${req.body.spotId}', '${req.body.notes}')`, function (error, results, fields) {
+  connection.query(`INSERT INTO reports (reportId, tripId, uid, spotId, notes) VALUES (?, ?, ?, ?, ?)`,[
+    req.body.reportId,
+    req.body.tripId,
+    req.body.uid,
+    req.body.spotId,
+    req.body.notes
+  ], function (error, results, fields) {
     if (error) throw error;
       res.send(results);
   })
 })
 
 app.put('/reports', function (req, res) {
-  connection.query(`UPDATE reports SET notes = '${req.body.notes}', spotId = '${req.body.spotId}' WHERE reportId = '${req.body.reportId}'`, (err, results, fields) => {
+  connection.query(`UPDATE reports SET notes = ?, spotId = ? WHERE reportId = ?`,[
+    req.body.notes,
+    req.body.spotId,
+    req.body.reportId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -105,7 +117,9 @@ app.put('/reports', function (req, res) {
 
 //delete report
 app.delete('/reports/:reportId', function (req, res) {
-  connection.query(`DELETE FROM reports WHERE reportId = ${req.params.reportId}`, (err, results, fields) => {
+  connection.query(`DELETE FROM reports WHERE reportId = ?`,[
+    req.params.reportId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
@@ -113,7 +127,9 @@ app.delete('/reports/:reportId', function (req, res) {
 
 //delete all reports associated with a tripId
 app.delete('/reports-trip/:tripId', function (req, res) {
-  connection.query(`DELETE FROM reports WHERE tripId = ${req.params.tripId}`, (err, results, fields) => {
+  connection.query(`DELETE FROM reports WHERE tripId = ?`,[
+    req.params.tripId
+  ], (err, results, fields) => {
     if (err) throw err;
       res.send(results);
   })
