@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const router = express.Router();
-const dbCred = require('../private/db_credentials')
+// const dbCred = require('../private/db_credentials')
 
 //---> start endpoints
 
@@ -72,7 +72,7 @@ router.delete('/clients-trip/:tripid', function (req, res) {
 
 //---> end endpoints
 
-const connection = mysql.createConnection(dbCred);
-connection.connect();
+// const connection = mysql.createConnection(dbCred);
+// connection.connect();
 
 module.exports = router
