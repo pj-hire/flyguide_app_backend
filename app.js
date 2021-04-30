@@ -5,7 +5,7 @@ const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-let dbCred = require('./private/db_credentials');
+let dbCred
 const env = process.env.NODE_ENV || 'development';
 
 if (env === 'development') {
