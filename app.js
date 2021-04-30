@@ -5,7 +5,15 @@ const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const dbCred = require('./private/db_credentials');
+let dbCred = require('./private/db_credentials');
+const env = process.env.NODE_ENV || 'development';
+
+if (env === 'development') {
+  dbCred = require('./private/db_credentials')
+} else {
+  dbCred = 'process.env.prodCredentials'
+}
+
 const connection = mysql.createConnection(dbCred);
 
 connection.connect();
@@ -13,6 +21,8 @@ connection.connect();
 app.use(cors());
 
 app.use(bodyParser.json());
+
+
 
 //---> ROUTING
 
