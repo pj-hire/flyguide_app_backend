@@ -9,9 +9,9 @@ let dbCred
 const env = process.env.NODE_ENV || 'development';
 
 if (env === 'development') {
-  dbCred = require('./private/db_credentials')
+  dbCred = require('./private/db_credentials');
 } else {
-  dbCred = 'process.env.prodCredentials'
+  dbCred = process.env.prodCredentials;
 }
 
 const connection = mysql.createConnection(dbCred);
