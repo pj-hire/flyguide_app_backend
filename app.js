@@ -12,7 +12,7 @@ if (env === 'development') {
   dbCred = require('./private/db_credentials');
 } else {
   dbCred = {
-    host: process.env.host,
+    host: process.env.HOST,
     user: process.env.USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
