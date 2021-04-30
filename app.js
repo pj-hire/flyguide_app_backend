@@ -11,7 +11,12 @@ const env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
   dbCred = require('./private/db_credentials');
 } else {
-  dbCred = process.env.prodCredentials;
+  dbCred = {
+    host: process.env.host,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+  }
 }
 
 const connection = mysql.createConnection(dbCred);
