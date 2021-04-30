@@ -1,7 +1,19 @@
 const express = require('express');
 const mysql = require('mysql');
 const router = express.Router();
-// const dbCred = require('../private/db_credentials')
+let dbCred
+const env = process.env.NODE_ENV || 'development';
+
+if (env === 'development') {
+  dbCred = require('../private/db_credentials');
+} else {
+  dbCred = {
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+  }
+}
 
 //---> start endpoints
 
@@ -68,7 +80,7 @@ router.delete('/reports-trip/:tripId', function (req, res) {
 
 //---> end endpoints
 
-// const connection = mysql.createConnection(dbCred);
-// connection.connect();
+const connection = mysql.createConnection(dbCred);
+connection.connect();
 
 module.exports = router
